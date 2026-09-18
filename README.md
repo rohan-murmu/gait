@@ -16,7 +16,11 @@
 </p>
 
 <p align="center">
-  <a href="https://rohan-murmu.github.io/gait/"><b>rohan-murmu.github.io/gait</b></a>
+  <a href="https://gait-tool.vercel.app/"><b>gait-tool.vercel.app</b></a>
+  &nbsp;·&nbsp;
+  <a href="#install">Install</a>
+  &nbsp;·&nbsp;
+  <a href="#analysis">Benchmarks</a>
 </p>
 
 ```
@@ -83,6 +87,18 @@ git cannot do alone:
 | **An honest answer to a bad question** | Pre-flight checks at both ends, and a refusal with a reason instead of a wrong sha |
 
 That is the whole contribution. It is deliberately small.
+
+## Website
+
+**[gait-tool.vercel.app](https://gait-tool.vercel.app/)**
+
+The same argument as this README, laid out to be read rather than scanned: why `git bisect`
+cannot help with an agent session, the three things gait adds, a 3D view of the checkpoint
+chain with the breaking edit lit up, and the benchmark numbers — including the section on
+what those numbers do not show, which is on the landing page rather than buried here.
+
+It is one static file in [`web/`](web/index.html) with no build step and no framework.
+Open it straight from the filesystem if you want to read it offline.
 
 ## Install
 
@@ -315,6 +331,8 @@ call it:
 > free.
 
 That second sentence exists because of a measurement. See below.
+
+<a id="analysis"></a>
 
 ## Analysis
 
