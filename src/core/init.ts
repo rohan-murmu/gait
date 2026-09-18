@@ -8,10 +8,14 @@ const HOOK_MATCHER = "Edit|Write|MultiEdit|NotebookEdit";
 
 const CLAUDE_SECTION = `## gait
 
-When a test or build that was passing starts failing, do not re-read files to guess
-what broke. Call \`gait_find_breaking_change\` with the exact failing command. It
-bisects the checkpoints taken after every edit and returns the one edit that broke
-it, with the files and the patch.
+When something that was passing starts failing and the error does not say which file
+is at fault -- a failing assertion, a wrong value, a behaviour change -- do not re-read
+files to guess. Call \`gait_find_breaking_change\` with the exact failing command. It
+bisects the checkpoints taken after every edit and returns the one edit that broke it,
+with the files and the patch.
+
+Compiler and linter errors already print a file and line; read that instead, it is
+faster and free.
 
 Call \`gait_checkpoint\` before starting a risky or wide-reaching change so there is
 a labelled point to bisect back to.

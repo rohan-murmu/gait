@@ -49,6 +49,43 @@ What git cannot do alone is the other three things:
 
 That is the whole contribution. It is deliberately small.
 
+## Measured on a real project
+
+Run on a real TypeScript project (50 files, 22 TS sources, `tsc -b && vite build`) with a simulated 20-edit agent session. Edit 13 replaced a
+deprecated `substr(2, 9)` with `slice(2, 9)`: a real mistake people make, since `substr`
+takes a length and `slice` takes an end index. It type-checks, it builds, and it silently
+shortens every generated user id.
+
+| | without gait | with gait |
+| --- | --- | --- |
+| does `tsc -b` catch it | no, build is clean | — |
+| does the failure name the file | no, only the assertion site | yes, `src/utils/index.ts` |
+| is `git bisect` available | no — 0 commits made during the session | — |
+| search space | 16 files, 1,722 lines, 40 KB | 1 file, 1 line |
+| cost to localise | read the session diff and reason about it | 7 test runs, 1.4s, 858 bytes of output |
+
+The 21-checkpoint chain resolved in 7 runs — 2 pre-flight plus 5 steps.
+
+### Where it does not help
+
+The same experiment with a type error instead:
+
+```
+$ npx tsc -b
+src/utils/contants.ts(8,14): error TS2322: Type 'string' is not assignable to type 'number'.
+
+$ gait why --repro "npx tsc -b"
+   M  src/utils/contants.ts
+   5 test runs over 10 checkpoints in 16.0s
+```
+
+gait spent 16 seconds arriving at the file the compiler named instantly, for free — and
+at coarser resolution, since tsc gave a line and a column.
+
+**So the rule, which is what the MCP tool description tells the agent:** call gait when
+the failure does not say which file is at fault. For compiler and linter errors, read the
+line they printed. A tool that cannot say when not to use it is not worth installing.
+
 ## Install
 
 ```bash

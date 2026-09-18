@@ -28,13 +28,16 @@ export async function startMcpServer(): Promise<void> {
     {
       title: "Find the edit that broke it",
       description:
-        "Call this the moment a test, build, or command that was previously passing starts " +
-        "failing. Do NOT re-read files to guess what broke -- that is slow and usually wrong. " +
-        "gait snapshots the working tree after every edit, and this bisects those snapshots to " +
-        "find the single edit that turned the command from passing to failing, returning the " +
-        "files it changed and the patch. Pass the exact failing command, as narrow as you can " +
-        "make it (one test file or one test case, not the whole suite): a narrow command is " +
-        "faster to bisect and far less likely to be flaky.",
+        "Call this when something that used to work now fails AND the failure output does not " +
+        "tell you which file is at fault -- a failing assertion, a wrong value, a behaviour " +
+        "change, a test that passes alone but not in the suite. Do NOT re-read files to guess " +
+        "what broke; gait snapshots the working tree after every edit and bisects those " +
+        "snapshots to find the single edit that turned the command from passing to failing, " +
+        "returning the files it changed and the patch. " +
+        "Do NOT call this for compiler or linter errors: those already print the file and line, " +
+        "so reading that line is faster and free. " +
+        "Pass the exact failing command, as narrow as you can make it (one test file or one test " +
+        "case, not the whole suite): a narrow command bisects faster and flakes far less.",
       inputSchema: {
         repro_command: z
           .string()
