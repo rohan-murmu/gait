@@ -18,7 +18,8 @@
     "build": "tsc",
     "dev": "tsc --watch",
     "prepare": "tsc",
-    "test": "npm run build && node --test \"test/*.test.js\""
+    "test": "npm run build && node --test \"test/*.test.js\"",
+    "bench": "npm run build && node bench/run.js bench/configs/self.js"
   },
   "keywords": [
     "git",
