@@ -1,0 +1,39 @@
+{
+  "name": "gait",
+  "version": "0.1.0",
+  "description": "Finds the exact agent edit that broke your tests. Checkpoints every edit off to the side, bisects them in a throwaway worktree.",
+  "type": "module",
+  "bin": {
+    "gait": "dist/surface/cli.js"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "prepare": "tsc"
+  },
+  "keywords": [
+    "git",
+    "bisect",
+    "ai-agents",
+    "mcp",
+    "claude-code"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.30.0",
+    "commander": "^12.1.0",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.3",
+    "typescript": "^5.9.3"
+  }
+}
