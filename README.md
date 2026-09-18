@@ -15,6 +15,10 @@
   <img alt="license" src="https://img.shields.io/badge/license-MIT-blue">
 </p>
 
+<p align="center">
+  <a href="https://rohan-murmu.github.io/gait/"><b>rohan-murmu.github.io/gait</b></a>
+</p>
+
 ```
 $ gait why --repro "node gait-eval/check.ts"
   PASS  976805f  edit 10: comment Landing
@@ -264,6 +268,11 @@ src/surface/                   two shells over one core
   cli.ts         commander; also hosts the hidden `_step` oracle
   mcp.ts         four tools over stdio
   self.ts        resolves the step-oracle argv
+
+test/          end-to-end, against dist/ rather than the sources
+bench/         injection harness + a self-contained fixture
+web/           the landing page; one static file, deployed by Actions
+assets/        logo, in SVG and PNG
 ```
 
 ### System design decisions

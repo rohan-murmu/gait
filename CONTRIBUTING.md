@@ -31,6 +31,10 @@ answers to the same question.
 If you find yourself writing `console.log` in `src/core/`, the logic belongs in a
 returned value instead.
 
+`web/index.html` is the landing page: one self-contained file, no build step. Open it
+straight from the filesystem — `web/assets` is a symlink to the repo's `assets/`, so it
+renders identically locally and on Pages.
+
 ## Pull requests
 
 - **Add a test.** `test/` covers the invariants the design rests on: checkpoints must
