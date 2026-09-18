@@ -84,13 +84,15 @@ h1 .hl{background:linear-gradient(115deg,var(--coral-lt),var(--coral));-webkit-b
 .stage{perspective:1400px;perspective-origin:50% 45%;height:480px;position:relative;
   transform-origin:60% 50%}
 .deck{position:absolute;inset:0;transform-style:preserve-3d;
-  transform:rotateX(52deg) rotateZ(-38deg);animation:drift 22s ease-in-out infinite}
+  transform:translate(var(--tx),var(--ty)) rotateX(58deg) rotateZ(-16deg) scale(var(--ds));
+  animation:drift 22s ease-in-out infinite}
+.deck{--tx:0px;--ty:0px;--ds:1}
 @keyframes drift{
-  0%,100%{transform:translate(74px,-26px) rotateX(52deg) rotateZ(-38deg) translateZ(0)}
-  50%{transform:translate(74px,-26px) rotateX(46deg) rotateZ(-31deg) translateZ(18px)}
+  0%,100%{transform:translate(var(--tx),var(--ty)) rotateX(58deg) rotateZ(-16deg) scale(var(--ds))}
+  50%{transform:translate(var(--tx),var(--ty)) rotateX(53deg) rotateZ(-11deg) scale(calc(var(--ds) * 1.03))}
 }
-.card3d{position:absolute;left:50%;top:50%;width:min(230px,62vw);height:150px;
-  margin:-75px 0 0 min(-115px,-31vw);
+.card3d{position:absolute;left:50%;top:50%;width:min(206px,58vw);height:132px;
+  margin:-66px 0 0 min(-103px,-29vw);
   border-radius:16px;transform-style:preserve-3d;
   background:linear-gradient(145deg,rgba(255,255,255,.10),rgba(255,255,255,.03));
   border:1px solid rgba(255,255,255,.14);
@@ -114,6 +116,7 @@ h1 .hl{background:linear-gradient(115deg,var(--coral-lt),var(--coral));-webkit-b
 .beam{position:absolute;left:50%;top:50%;width:300px;height:2px;margin-left:-150px;
   background:linear-gradient(90deg,transparent,var(--coral),transparent);
   box-shadow:0 0 22px var(--coral);transform-style:preserve-3d}
+
 
 /* ---------- section scaffolding ---------- */
 section{padding:92px 0;position:relative}
@@ -165,7 +168,21 @@ h4{font-size:16.5px;font-weight:600;margin-bottom:7px}
   padding:44px;border-radius:26px;background:linear-gradient(150deg,rgba(255,255,255,.045),rgba(255,255,255,.012));
   border:1px solid var(--line)}
 .diagram-copy p{color:var(--mute);font-weight:300;margin-bottom:26px}
-.stage-sm{height:340px;perspective:1200px}
+.halving{display:flex;flex-direction:column;gap:13px}
+.hv{display:grid;grid-template-columns:34px 1fr auto;align-items:center;gap:14px}
+.hv-n{font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--dim);text-align:right}
+.hv-bar{height:12px;border-radius:6px;width:var(--w);
+  background:linear-gradient(90deg,rgba(124,116,255,.85),rgba(91,82,224,.35));
+  box-shadow:0 0 18px -4px rgba(124,116,255,.6);
+  transform-origin:left;animation:grow .9s cubic-bezier(.2,.8,.2,1) both}
+.hv:nth-child(2) .hv-bar{animation-delay:.08s} .hv:nth-child(3) .hv-bar{animation-delay:.16s}
+.hv:nth-child(4) .hv-bar{animation-delay:.24s} .hv:nth-child(5) .hv-bar{animation-delay:.32s}
+.hv:nth-child(6) .hv-bar{animation-delay:.4s}
+@keyframes grow{from{transform:scaleX(0);opacity:0}to{transform:scaleX(1);opacity:1}}
+.hv-l{font-size:13px;color:var(--dim);white-space:nowrap}
+.hv.found .hv-bar{background:linear-gradient(90deg,var(--coral),var(--coral-lt));
+  box-shadow:0 0 22px -2px rgba(255,107,90,.85)}
+.hv.found .hv-n,.hv.found .hv-l{color:var(--coral-lt)}
 .stat-row{display:flex;gap:34px}
 .stat-row div{display:flex;flex-direction:column}
 .stat-row b{font-size:30px;font-weight:600;letter-spacing:-.03em;
@@ -312,6 +329,8 @@ footer{border-top:1px solid var(--line);padding:44px 0 56px;margin-top:40px}
   </div>
 </div></nav>
 
+
+
 <header id="top"><div class="wrap hero">
   <div>
     <div class="eyebrow"><b>v0.1</b><span>git-native · MCP-ready · zero config</span></div>
@@ -408,7 +427,14 @@ footer{border-top:1px solid var(--line);padding:44px 0 56px;margin-top:40px}
         <div><b>1</b><span>file returned</span></div>
       </div>
     </div>
-    <div class="stage stage-sm"><div class="deck deck-2" id="deck2"></div></div>
+    <div class="halving">
+      <div class="hv"><span class="hv-n">21</span><span class="hv-bar" style="--w:100%"></span><span class="hv-l">candidates</span></div>
+      <div class="hv"><span class="hv-n">11</span><span class="hv-bar" style="--w:52%"></span><span class="hv-l">run 3</span></div>
+      <div class="hv"><span class="hv-n">6</span><span class="hv-bar" style="--w:29%"></span><span class="hv-l">run 4</span></div>
+      <div class="hv"><span class="hv-n">3</span><span class="hv-bar" style="--w:15%"></span><span class="hv-l">run 5</span></div>
+      <div class="hv"><span class="hv-n">2</span><span class="hv-bar" style="--w:10%"></span><span class="hv-l">run 6</span></div>
+      <div class="hv found"><span class="hv-n">1</span><span class="hv-bar" style="--w:5%"></span><span class="hv-l">edit 13</span></div>
+    </div>
   </div>
 </div></section>
 
@@ -562,8 +588,32 @@ function buildDeck(el, {gap = 74, beam = true} = {}){
     el.appendChild(b);
   }
 }
-buildDeck(document.getElementById('deck'), {gap: 60});
-buildDeck(document.getElementById('deck2'), {gap: 56});
+buildDeck(document.getElementById('deck'), {gap: 54});
+
+// A rotated 3D stack's optical centre is nowhere near its layout centre, and the offset
+// moves with card size and stage scale -- so measure it rather than hard-coding a nudge.
+function centreDeck(deck){
+  const stage = deck.parentElement;
+  const anim = getComputedStyle(deck).animationName;
+  deck.style.setProperty('--tx', '0px');
+  deck.style.setProperty('--ty', '0px');
+  deck.style.animation = 'none';
+  void deck.offsetWidth;
+  const st = stage.getBoundingClientRect();
+  const rects = [...deck.querySelectorAll('.card3d')].map(c => c.getBoundingClientRect());
+  if(rects.length){
+    const l = Math.min(...rects.map(r => r.left)),  r = Math.max(...rects.map(r => r.right));
+    const t = Math.min(...rects.map(r => r.top)),   b = Math.max(...rects.map(r => r.bottom));
+    deck.style.setProperty('--tx', Math.round((st.left + st.right) / 2 - (l + r) / 2) + 'px');
+    deck.style.setProperty('--ty', Math.round((st.top + st.bottom) / 2 - (t + b) / 2) + 'px');
+  }
+  deck.style.animation = anim === 'none' ? '' : '';
+}
+const heroDeck = document.getElementById('deck');
+centreDeck(heroDeck);
+let centreTick;
+addEventListener('resize', () => { clearTimeout(centreTick); centreTick = setTimeout(() => centreDeck(heroDeck), 120); }, {passive:true});
+
 
 // nav border on scroll
 const nav = document.getElementById('nav');
@@ -578,6 +628,7 @@ document.querySelectorAll('[data-tabs]').forEach(group => {
     root.querySelectorAll('[data-pane]').forEach(p => { p.hidden = p.dataset.pane !== btn.dataset.tab; });
   });
 });
+
 
 // reveal on scroll
 const io = new IntersectionObserver(es => es.forEach(en => {
