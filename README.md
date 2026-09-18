@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/logo.svg" alt="" width="132" height="132">
+</p>
+
 <h1 align="center">gait</h1>
 
 <p align="center">
