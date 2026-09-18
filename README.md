@@ -49,26 +49,56 @@ What git cannot do alone is the other three things:
 
 That is the whole contribution. It is deliberately small.
 
-## Measured on a real project
+## Measured
 
-Run on a real TypeScript project (50 files, 22 TS sources, `tsc -b && vite build`) with a simulated 20-edit agent session. Edit 13 replaced a
-deprecated `substr(2, 9)` with `slice(2, 9)`: a real mistake people make, since `substr`
-takes a length and `slice` takes an end index. It type-checks, it builds, and it silently
-shortens every generated user id.
+Two real projects, two languages, four injected regressions. gait identified the
+breaking edit in all four.
+
+### Go — a project with a real test suite
+
+48 Go files, 13 test files, `go test ./...`. Twenty-edit agent session; the regression
+lands mid-session and is a plausible "cleanup" of code the author had commented as
+deliberate. Three blast radii: one line in one package, one line breaking three
+packages, and a two-file edit breaking seven.
+
+| scenario | found | files to inspect | lines to read | test runs vs linear |
+| --- | --- | --- | --- | --- |
+| subtle (1 file, 3 pkgs fail) | yes | 20 → 1, **95%** fewer | 223 → 15, **93%** fewer | 20 → 6, **70%** fewer |
+| moderate (1 file, 3 pkgs fail) | yes | 20 → 1, **95%** fewer | 223 → 15, **93%** fewer | 20 → 7, **65%** fewer |
+| major (2 files, 7 pkgs fail) | yes | 20 → 2, **90%** fewer | 241 → 37, **85%** fewer | 20 → 6, **70%** fewer |
+| **mean** | **3/3** | **93% fewer** | **90% fewer** | **68% fewer** |
+
+Mean wall clock 5.4s. "Lines to read" compares gait's patch against the *whole session
+diff* — the strongest baseline available to an agent without gait. Against the weaker
+but more realistic baseline of opening each changed file, the reduction is 99%.
+
+The major scenario is the one worth looking at: the breaking edit touched two files in
+two packages, and gait named both.
+
+Note that Go needs no `linkPaths` — modules live in a global cache, so the throwaway
+worktree builds with nothing linked into it.
+
+### TypeScript — a behavioural regression the compiler cannot see
+
+50 files, 22 TS sources. Edit 13 of 20 replaced a deprecated `substr(2, 9)` with
+`slice(2, 9)`: a real mistake, since `substr` takes a length and `slice` takes an end
+index. It type-checks, it builds, and every generated user id silently loses two
+characters.
 
 | | without gait | with gait |
 | --- | --- | --- |
-| does `tsc -b` catch it | no, build is clean | — |
-| does the failure name the file | no, only the assertion site | yes, `src/utils/index.ts` |
-| is `git bisect` available | no — 0 commits made during the session | — |
+| `tsc -b` catches it | no, build is clean | — |
+| failure names the file | no, only the assertion site | yes, `src/utils/index.ts` |
+| `git bisect` available | **no — 0 commits during the session** | — |
 | search space | 16 files, 1,722 lines, 40 KB | 1 file, 1 line |
-| cost to localise | read the session diff and reason about it | 7 test runs, 1.4s, 858 bytes of output |
+| cost | read the diff and reason about it | 7 runs, 1.4s, 858 bytes |
 
-The 21-checkpoint chain resolved in 7 runs — 2 pre-flight plus 5 steps.
+That `git bisect` row is the point of the whole tool. It was not slower — it had nothing
+to search. Twenty edits, one commit, a dirty tree.
 
 ### Where it does not help
 
-The same experiment with a type error instead:
+The same TypeScript session with a type error instead:
 
 ```
 $ npx tsc -b
@@ -79,8 +109,8 @@ $ gait why --repro "npx tsc -b"
    5 test runs over 10 checkpoints in 16.0s
 ```
 
-gait spent 16 seconds arriving at the file the compiler named instantly, for free — and
-at coarser resolution, since tsc gave a line and a column.
+gait spent 16 seconds arriving at the file the compiler had already named instantly, for
+free, and at coarser resolution — tsc gave a line and a column.
 
 **So the rule, which is what the MCP tool description tells the agent:** call gait when
 the failure does not say which file is at fault. For compiler and linter errors, read the
