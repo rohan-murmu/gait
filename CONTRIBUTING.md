@@ -33,7 +33,7 @@ returned value instead.
 
 `web/index.html` is the landing page: one self-contained file, no build step. Open it
 straight from the filesystem — `web/assets` is a symlink to the repo's `assets/`, so it
-renders identically locally and on Pages.
+renders identically locally and on [the deployed site](https://gait-tool.vercel.app/).
 
 ## Pull requests
 
