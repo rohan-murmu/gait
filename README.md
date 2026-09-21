@@ -102,34 +102,16 @@ Open it straight from the filesystem if you want to read it offline.
 
 ## Install
 
-### Homebrew
-
-```bash
-brew install rohan-murmu/gait/gait
-```
-
-<details>
-<summary>Before the first tagged release, or to track <code>main</code></summary>
-
-```bash
-brew install --HEAD rohan-murmu/gait/gait
-```
-</details>
-
-### npm
-
-```bash
-npm install -g gait
-```
-
-The npm package ships prebuilt, so this needs no toolchain beyond Node.
-
-### From source
+From source. That is the only supported install today — there is no Homebrew tap and no
+published npm package yet.
 
 ```bash
 git clone https://github.com/rohan-murmu/gait.git
 cd gait && npm install && npm link
 ```
+
+`npm install` builds the TypeScript through the `prepare` script, and `npm link` puts
+`gait` on your `PATH`. Check it with `gait --version`.
 
 Requires **Node ≥ 20** and a modern **git** with per-worktree bisect state (tested on 2.43).
 

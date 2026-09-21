@@ -71,6 +71,5 @@ with a verifiable answer, and keeps doing only that.
 
 ## Releasing
 
-Tag `vX.Y.Z` and push. The release workflow prints the tarball's sha256; open a PR
-against [`rohan-murmu/homebrew-gait`](https://github.com/rohan-murmu/homebrew-gait)
-updating `url` and `sha256` in `Formula/gait.rb`.
+Tag `vX.Y.Z` and push. There is no package to publish yet — gait installs from source,
+so a release is the tag plus whatever notes go with it.
